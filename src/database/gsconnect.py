@@ -87,8 +87,3 @@ class gsdb:
             i += 1
             row = sheet.row_values(i)
         return masters
-
-
-
-db = gsdb('https://docs.google.com/spreadsheets/d/1F6TqY-ktVSZGXARUPj3A8uYN0EaYf-2cw34SG19EScc/edit#gid=0')
-db.get_masters()
