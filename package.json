@@ -1,0 +1,20 @@
+{
+    "name": "TelegramTestBot",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+        "build": "echo \"No build specified\" && exit 1",
+        "test": "echo \"No test specified\" && exit 1",
+        "start": "src\bot.py"
+     },
+     "repository": {
+         "type": "git",
+         "url": "git+https://github.com/StillMonad/TelegramTestBot.git"
+     },
+     "author": "Kim Andromeds",
+     "license": "ISC",
+     "bugs": {
+         "url": "https://github.com/StillMonad/TelegramTestBot/issues"
+     },
+     "homepage": "https://github.com/StillMonad/TelegramTestBot#readme"
+}
