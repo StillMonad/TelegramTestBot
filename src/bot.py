@@ -1,71 +1,64 @@
 from telebot import TeleBot, types
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+
 from config import BOT_TOKEN, GS_LINK
-from transliterate import translit
 from gsconnect import gsdb
+from markups import my_markup
+from tools import tr
 
 bot = TeleBot(BOT_TOKEN)
 db = gsdb(GS_LINK)
-
-data = {
-    'Алина Харламова':
-        ('Тайцзи', 'Цигун'),
-    'Вадим Черноусов':
-        ('Тайцзи', 'Цигун'),
-    'Роман Ляшенко':
-        ('Массаж',),
-    'Ксения Ицкович':
-        ('Китайский язык',)
-}
+markup = my_markup(db)
 
 
-def tr(s):
-    return translit(s, reversed=True)
+@bot.message_handler(commands=['uid'])
+def get_uid(msg: types.Message):
+    """
+    получение user_id через /uid
+    """
+    bot.send_message(chat_id=msg.chat.id, text=f"UID: {msg.from_user.id}")
+
+
+@bot.message_handler(commands=['promote'])
+def promote(msg: types.Message):
+    """
+    Добавление нового администратора через /promote user_id
+
+    user_id можно получить через /uid
+    """
+    try:
+        uid = int(msg.text.split(' ')[1])
+    except IndexError:
+        return
+
+    if not db.is_admin(msg.from_user):
+        bot.send_message(chat_id=msg.chat.id,
+                         text=f"У вас не достаточно привелегий.\nПопросите помощи у администратора.")
+        return
+    if db.add_admin(uid):
+        bot.send_message(chat_id=msg.chat.id, text=f"Добавление успешно")
+    else:
+        bot.send_message(chat_id=msg.chat.id, text=f"Ошибка добавления:\nПользователь уже существует.")
 
 
 @bot.message_handler(commands=['start', 'menu', 'меню', 'начало', 'старт'])
 def start(msg: types.Message):
-    markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton("Записаться на занятия", callback_data=tr("Записаться на занятия")))
-    markup.add(InlineKeyboardButton("Афиша мероприятий и семинаров", callback_data="but_2"))
-    markup.add(InlineKeyboardButton("Расписание", callback_data="but_3"))
-    markup.add(InlineKeyboardButton("Прайс-лист", callback_data="but_4"))
-    markup.add(InlineKeyboardButton("Контакты", callback_data="but_5"))
-    markup.add(InlineKeyboardButton("Акции", callback_data="but_6"))
-    markup.add(InlineKeyboardButton("Аренда залов", callback_data="but_7"))
-    markup.add(InlineKeyboardButton("Лавка студии", callback_data="but_8"))
-    bot.send_message(chat_id=msg.chat.id, text=f"Привет {msg.chat.first_name}, чем я могу вам помочь?",
-                     reply_markup=markup)
+    bot.send_message(chat_id=msg.chat.id, text=f"Привет {msg.chat.username}, чем я могу помочь?",
+                     reply_markup=markup.main)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == tr("Назад1"))
 def but_menu_pressed(call: types.CallbackQuery):
-    markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton("Записаться на занятия", callback_data=tr("Записаться на занятия")))
-    markup.add(InlineKeyboardButton("Афиша мероприятий и семинаров", callback_data="but_2"))
-    markup.add(InlineKeyboardButton("Расписание", callback_data="but_3"))
-    markup.add(InlineKeyboardButton("Прайс-лист", callback_data="but_4"))
-    markup.add(InlineKeyboardButton("Контакты", callback_data="but_5"))
-    markup.add(InlineKeyboardButton("Акции", callback_data="but_6"))
-    markup.add(InlineKeyboardButton("Аренда залов", callback_data="but_7"))
-    markup.add(InlineKeyboardButton("Лавка студии", callback_data="but_8"))
     bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                          text=f"Привет {call.message.chat.first_name}, чем я могу вам помочь?",
-                          reply_markup=markup)
+                          text=f"Привет {call.message.chat.username}, чем я могу помочь?",
+                          reply_markup=markup.main)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == tr("Записаться на занятия"))
 def but1_pressed(call: types.CallbackQuery):
     global data
-    markup = InlineKeyboardMarkup()
-
-    [markup.add(InlineKeyboardButton(key + ' (' + ', '.join(data[key]) + ')' \
-                                     , callback_data=tr(key))) for key in data.keys()]
-
-    markup.add(InlineKeyboardButton("Назад", callback_data=tr("Назад1")))
 
     bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                          text='К кому вы хотите записаться?', reply_markup=markup)
+                          text='К кому вы хотите записаться?', reply_markup=markup.lessons)
 
 
 @bot.callback_query_handler(func=lambda call: call.data == "but_2")
