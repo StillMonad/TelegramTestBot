@@ -12,8 +12,8 @@ class my_markup:
     def __make_main_markup(self):
         # главное меню
         main = InlineKeyboardMarkup()
-        main.add(InlineKeyboardButton("Записаться на занятия", callback_data=tr("Записаться на занятия")))
-        main.add(InlineKeyboardButton("Афиша мероприятий и семинаров", callback_data="but_2"))
+        main.add(InlineKeyboardButton("Записаться на занятия", callback_data="Записаться на занятия"))
+        main.add(InlineKeyboardButton("Афиша мероприятий и семинаров", callback_data="Афиша"))
         r3 = InlineKeyboardButton("Расписание", callback_data="but_3")
         r4 = InlineKeyboardButton("Прайс-лист", callback_data="but_4")
         r5 = InlineKeyboardButton("Контакты", callback_data="but_5")
@@ -33,11 +33,15 @@ class my_markup:
             data[v[0]] = v[1:]
         for key in data.keys():
             lessons.add(InlineKeyboardButton(key + ' (' + ', '.join(data[key]) + ')', callback_data=tr(key)))
-        lessons.add(InlineKeyboardButton("Назад", callback_data=tr("Назад1")))
+        lessons.add(InlineKeyboardButton("Назад", callback_data="Главное меню"))
         return lessons
 
     def __make_activities_markup(self):
         # Афиша
         activities = InlineKeyboardMarkup()
-        activities.add(InlineKeyboardButton("Назад", callback_data=tr("Назад1")))
+        r3 = InlineKeyboardButton("123")
+        r4 = InlineKeyboardButton("123")
+        r5 = InlineKeyboardButton("123")
+        activities.row(r3, r4, r5)
+        #activities.add(InlineKeyboardButton("Назад", callback_data="Главное меню"))
         return activities

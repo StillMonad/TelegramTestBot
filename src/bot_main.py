@@ -10,3 +10,4 @@ if __name__ == '__main__':
     print("Done")
     print("Bot started.")
     bot.infinity_polling(skip_pending=True)
+    bot.send_invoice()

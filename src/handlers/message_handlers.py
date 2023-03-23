@@ -1,4 +1,7 @@
+import urllib
+
 from telebot import types
+
 
 class reg_message_handler:
     def __init__(self, bot, db, markup):
@@ -8,7 +11,6 @@ class reg_message_handler:
             получение user_id через /uid
             """
             bot.send_message(chat_id=msg.chat.id, text=f"UID: {msg.from_user.id}")
-
 
         @bot.message_handler(commands=['promote'])
         def promote(msg: types.Message):
@@ -31,8 +33,8 @@ class reg_message_handler:
             else:
                 bot.send_message(chat_id=msg.chat.id, text=f"Ошибка добавления:\nПользователь уже существует.")
 
-
         @bot.message_handler(commands=['start', 'menu', 'меню', 'начало', 'старт'])
         def start(msg: types.Message):
             bot.send_message(chat_id=msg.chat.id, text=f"Привет {msg.chat.username}, чем я могу помочь?",
                              reply_markup=markup.main)
+
