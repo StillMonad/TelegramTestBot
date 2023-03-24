@@ -1,18 +1,20 @@
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from telebot import types, TeleBot
 from src.tools import tr
+from src.objects.moderation import Moderation
+
 import src.tools as tools
 
 
 @tools.show_call
 class Lessons:
-    def __init__(self, bot: TeleBot, db):
+    def __init__(self, bot: TeleBot, db, register):
         self.call_data = "Записаться на занятия"
         self.commands = ["записаться", "lessons"]
         self.text = "К кому вы хотите записаться?"
 
         self.markup = self.__make_markup(db)
-        self.__init_handlers(bot)
+        self.__init_handlers(bot, db, register)
 
     def __make_markup(self, db):
         # запись на занятия (выбор мастера)
@@ -26,11 +28,16 @@ class Lessons:
         lessons.add(InlineKeyboardButton("Назад", callback_data="Главное меню"))
         return lessons
 
-    def __init_handlers(self, bot: TeleBot):
+    def __init_handlers(self, bot: TeleBot, db, register):
         @bot.callback_query_handler(func=lambda call: call.data == self.call_data)
         def cb(call: types.CallbackQuery):
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=self.text,
-                                  reply_markup=self.markup, parse_mode="HTML")
+            users = Moderation.get_users(db)
+            if str(call.from_user.id) in users.keys():
+                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=self.text,
+                                    reply_markup=self.markup, parse_mode="HTML")
+            else:
+                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=register.text,
+                                      reply_markup=register.markup, parse_mode="HTML")
 
         @bot.message_handler(commands=self.commands)
         def message(msg: types.Message):

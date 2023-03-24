@@ -20,15 +20,16 @@ class Moderation:
 
             user_id можно получить через /uid
             """
+            if not db.is_admin(msg.from_user):
+                bot.send_message(chat_id=msg.chat.id,
+                                 text=f"У вас не достаточно привелегий.\nПопросите помощи у администратора.")
+                return
+
             try:
                 uid = int(msg.text.split(' ')[1])
             except IndexError:
                 return
 
-            if not db.is_admin(msg.from_user):
-                bot.send_message(chat_id=msg.chat.id,
-                                 text=f"У вас не достаточно привелегий.\nПопросите помощи у администратора.")
-                return
             if db.add_admin(uid):
                 bot.send_message(chat_id=msg.chat.id, text=f"Добавление успешно")
             else:
@@ -36,4 +37,13 @@ class Moderation:
 
     @staticmethod
     def get_users(db):
-        pass
+        users_table = db.get_sheet_data("Пользователи")
+        users = dict()
+        for user in users_table[1:]:
+            users[user[0]] = {"username": user[1],
+                              "first_name": user[2],
+                              "last_name": user[3],
+                              "email": user[4],
+                              "phone": user[5]
+                              }
+        return users

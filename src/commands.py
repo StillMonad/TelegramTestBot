@@ -1,15 +1,18 @@
 import urllib
+import src.tools as tools
 
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from telebot import types, TeleBot
-from src.tools import tr
-import src.tools as tools
+
 
 @tools.show_call
 class Commands:
     def __init__(self, bot, db):
         @bot.message_handler(commands=['download'])
         def message(msg: types.Message):
+            if not db.is_admin(msg.from_user):
+                bot.send_message(chat_id=msg.chat.id, text=f"У вас не достаточно привелегий.\n")
+                return
             text = msg.text.split(' ')
             if (len(text) != 3):
                 bot.send_message(chat_id=msg.chat.id, text="Используйте /download file_name url")
@@ -28,6 +31,7 @@ class Commands:
                 img.close()
 
 
+        # этот обработчик должен стоять в самом конце, так как он наиболее общий
         @bot.message_handler(func=lambda message: message.text[0] == '/')
         def message(msg):
             bot.send_message(chat_id=msg.chat.id, text=f"Я не знаю такой команды. 👿")

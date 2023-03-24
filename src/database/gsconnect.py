@@ -67,3 +67,10 @@ class gsdb:
             return True
         return False
 
+    def get_sheet_data(self, name):
+        sheet = self.db.worksheet(name)
+        return sheet.get_values()
+
+    def add_data(self, name, data):
+        sheet = self.db.worksheet(name)
+        sheet.append_row(data)
