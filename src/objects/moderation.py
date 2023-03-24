@@ -1,14 +1,17 @@
+import urllib
 from telebot import types
+import src.tools as tools
 
-class reg_message_handler:
-    def __init__(self, bot, db, markup):
+
+@tools.show_call
+class Moderation:
+    def __init__(self, bot, db):
         @bot.message_handler(commands=['uid'])
         def get_uid(msg: types.Message):
             """
             получение user_id через /uid
             """
             bot.send_message(chat_id=msg.chat.id, text=f"UID: {msg.from_user.id}")
-
 
         @bot.message_handler(commands=['promote'])
         def promote(msg: types.Message):
@@ -31,8 +34,6 @@ class reg_message_handler:
             else:
                 bot.send_message(chat_id=msg.chat.id, text=f"Ошибка добавления:\nПользователь уже существует.")
 
-
-        @bot.message_handler(commands=['start', 'menu', 'меню', 'начало', 'старт'])
-        def start(msg: types.Message):
-            bot.send_message(chat_id=msg.chat.id, text=f"Привет {msg.chat.username}, чем я могу помочь?",
-                             reply_markup=markup.main)
+    @staticmethod
+    def get_users(db):
+        pass

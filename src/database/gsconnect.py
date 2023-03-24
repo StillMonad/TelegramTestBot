@@ -1,6 +1,7 @@
+import urllib
 import gspread
 from telebot import types
-
+from src.classes.data import data
 
 class gsdb:
     def __init__(self, link):
@@ -12,8 +13,8 @@ class gsdb:
         self.worksheet_booking = self.db.worksheet('Оформление заказа')
         self.worksheet_workers = self.db.worksheet('Мастера')
         self.worksheet_activities = self.db.worksheet('Мероприятия')
+        self.worksheet_goods = self.db.worksheet('Товары')
         self.update_admins()
-        self.masters = self.get_masters()
 
     @staticmethod
     def get_coord(x, y):
@@ -66,24 +67,3 @@ class gsdb:
             return True
         return False
 
-    def get_masters(self):
-        sheet = self.worksheet_workers
-        i = 1
-        row = sheet.row_values(i)
-        masters = []
-        while row:
-            masters += [row]
-            i += 1
-            row = sheet.row_values(i)
-        return masters
-
-    def get_activities(self):
-        sheet = self.worksheet_workers
-        i = 1
-        row = sheet.row_values(i)
-        masters = []
-        while row:
-            masters += [row]
-            i += 1
-            row = sheet.row_values(i)
-        return masters
