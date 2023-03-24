@@ -45,12 +45,5 @@ class Lessons:
                              reply_markup=self.markup, parse_mode="HTML")
 
     def get_masters(self, db):
-        sheet = db.worksheet_workers
-        i = 1
-        row = sheet.row_values(i)
-        masters = []
-        while row:
-            masters += [row]
-            i += 1
-            row = sheet.row_values(i)
+        masters = db.get_sheet_data("Мастера")
         return masters

@@ -14,19 +14,10 @@ class gsdb:
         self.worksheet_workers = self.db.worksheet('Мастера')
         self.worksheet_activities = self.db.worksheet('Мероприятия')
         self.worksheet_goods = self.db.worksheet('Товары')
-        self.update_admins()
 
     @staticmethod
     def get_coord(x, y):
         return chr(x + 64) + str(y)
-
-    def set(self, sheet, coord: str, val):
-        if type(sheet) == int:
-            sheet = self.db.get_worksheet(sheet)
-            sheet.update(coord, val)
-        else:
-            sheet = self.db.worksheet(sheet)
-            sheet.update(coord, val)
 
     def get(self, sheet, coord):
         """
@@ -42,30 +33,6 @@ class gsdb:
             return s.get(coord).first()
         else:
             return s.cell(*coord).value
-
-    def update_admins(self):
-        sheet = self.worksheet_admins
-        self.admins = sheet.col_values(1)[1:]
-        self.admins = [int(a) for a in self.admins]
-
-    def get_admins(self):
-        return self.admins
-
-    def add_admin(self, uid):
-        self.update_admins()
-        self.admins = self.get_admins()
-        sheet = self.worksheet_admins
-        pos = (len(self.admins) + 2)
-        if uid in self.admins:
-            return False
-        sheet.update(self.get_coord(1, pos), [[uid]])
-        self.update_admins()
-        return True
-
-    def is_admin(self, user: types.User):
-        if user.id in self.admins:
-            return True
-        return False
 
     def get_sheet_data(self, name):
         sheet = self.db.worksheet(name)
