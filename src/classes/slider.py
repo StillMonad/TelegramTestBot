@@ -15,6 +15,8 @@ class slider(base):
         self.markup = self.markup_slider()
         self.init_callbacks()
 
+    def get_data(self):
+        return self.data[self.pos]
     def markup_slider(self):
         slider_markup = InlineKeyboardMarkup() if (self.data[self.pos].markup is None) else self.data[self.pos].markup
         r1 = InlineKeyboardButton("←", callback_data=self.name + "_but_left")
@@ -22,7 +24,10 @@ class slider(base):
         r3 = InlineKeyboardButton("→", callback_data=self.name + "_but_right")
         slider_markup.row(r1, r2, r3)
         if not (self.parent is None):
-            slider_markup.add(InlineKeyboardButton("Назад", callback_data=self.parent))
+            if self.get_data().media is None:
+                slider_markup.add(InlineKeyboardButton("Назад к меню", callback_data=self.parent))
+            else:
+                slider_markup.add(InlineKeyboardButton("Назад к меню", callback_data=self.parent + "new"))
         return slider_markup
 
     def init_callbacks(self):
@@ -47,12 +52,12 @@ class slider(base):
         markup = self.markup_slider()
         if self.data[self.pos].media is None:
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                  text=self.data[self.pos].text, reply_markup=markup)
+                                  text=self.data[self.pos].text, reply_markup=markup, parse_mode="HTML")
         else:
             name = self.data[self.pos].media
             with open(name, "rb") as file:
                 bot.edit_message_media(media=types.InputMediaPhoto(file), chat_id=call.message.chat.id,
                                        message_id=call.message.message_id, reply_markup=markup)
                 bot.edit_message_caption(chat_id=call.message.chat.id, message_id=call.message.id,
-                                         caption=self.data[self.pos].text, reply_markup=markup)
+                                         caption=self.data[self.pos].text, reply_markup=markup, parse_mode="HTML")
 

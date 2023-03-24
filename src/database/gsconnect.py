@@ -13,9 +13,8 @@ class gsdb:
         self.worksheet_booking = self.db.worksheet('Оформление заказа')
         self.worksheet_workers = self.db.worksheet('Мастера')
         self.worksheet_activities = self.db.worksheet('Мероприятия')
+        self.worksheet_goods = self.db.worksheet('Товары')
         self.update_admins()
-        self.masters = self.get_masters()
-        self.activities = self.get_activities()
 
     @staticmethod
     def get_coord(x, y):
@@ -68,38 +67,3 @@ class gsdb:
             return True
         return False
 
-    def get_masters(self):
-        sheet = self.worksheet_workers
-        i = 1
-        row = sheet.row_values(i)
-        masters = []
-        while row:
-            masters += [row]
-            i += 1
-            row = sheet.row_values(i)
-        return masters
-
-    def get_activities(self):
-        sheet = self.worksheet_activities
-        i = 1
-        row = sheet.row_values(i)
-        acts = []
-        while row:
-            print(row)
-            if len(row) == 1:
-                acts += [data(row[0], media=None)]
-                i += 1
-                row = sheet.row_values(i)
-                continue
-            name = "tmp\\" + "act_img" + str(i) + '.jpg'
-            img = open(name, 'wb')
-            try:
-                img.write(urllib.request.urlopen(row[1]).read())
-            except Exception:
-                name = row[1]
-            finally:
-                img.close()
-            acts += [data(row[0], media=name)]
-            i += 1
-            row = sheet.row_values(i)
-        return acts
