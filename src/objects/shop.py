@@ -27,11 +27,13 @@ class Shop:
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=self.text,
                                       reply_markup=self.markup, parse_mode="HTML")
             else:
+                self.slider.pos = 0
                 bot.send_photo(photo=open(self.slider.get_data().media, "rb"), chat_id=call.message.chat.id,
                                caption=self.slider.get_data().text, reply_markup=self.markup, parse_mode="HTML")
 
         @bot.message_handler(commands=self.commands)
         def message(msg: types.Message):
+            self.slider.pos = 0
             bot.send_message(chat_id=msg.chat.id, text=self.text, reply_markup=self.markup, parse_mode="HTML")
 
     def get_goods(self, db):
