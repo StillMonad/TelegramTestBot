@@ -35,6 +35,7 @@ class Activities:
                                       parse_mode="HTML")
             else:
                 self.slider.pos = 0
+                bot.delete_message(call.message.chat.id, call.message.message_id)
                 bot.send_photo(photo=open(self.slider.get_data().media, "rb"),
                                chat_id=call.message.chat.id,
                                caption=self.slider.get_data().text,
@@ -64,7 +65,7 @@ class Activities:
             except Exception:
                 name = os.path.join("resources", row[1])
             finally:
-                if not img is None:
+                if img is not None:
                     img.close()
             acts += [data(row[0], media=name)]
         return acts

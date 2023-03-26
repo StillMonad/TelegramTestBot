@@ -3,6 +3,8 @@ import src.tools as tools
 
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from telebot import types, TeleBot
+from src.objects.moderation import Moderation
+import os
 
 
 @tools.show_call
@@ -18,7 +20,7 @@ class Commands:
                 bot.send_message(chat_id=msg.chat.id, text="Используйте /download file_name url")
                 return
             try:
-                name = "tmp\\" + text[1] + ".jpg"
+                name = os.path.join('resources', text[1]) + ".jpg"
                 img = open(name, 'wb')
                 print(f"Trying to download {name} from {text[2]}")
                 file = urllib.request.urlopen(text[2]).read()
@@ -30,8 +32,11 @@ class Commands:
             finally:
                 img.close()
 
-
         # этот обработчик должен стоять в самом конце, так как он наиболее общий
         @bot.message_handler(func=lambda message: message.text[0] == '/')
-        def message(msg):
+        def message(msg: types.Message):
+            #if msg.reply_to_message:
+            #    bot.send_message(chat_id=msg.chat.id, text=f"👿")
             bot.send_message(chat_id=msg.chat.id, text=f"Я не знаю такой команды. 👿")
+
+

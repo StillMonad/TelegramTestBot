@@ -20,7 +20,7 @@ class Promotions:
 
     def __make_markup(self, db):
         markup = InlineKeyboardMarkup()
-        markup.add(InlineKeyboardButton("Начать диалог с администратором", callback_data="Начать диалог с администратором"))
+        markup.add(InlineKeyboardButton("Начать диалог с администратором", callback_data="Чат"))
         markup.add(InlineKeyboardButton("В главное меню", callback_data="Главное меню"))
         return markup
 

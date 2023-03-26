@@ -1,8 +1,6 @@
-import urllib
 import gspread
-from telebot import types
-from src.classes.data import data
 import os
+
 try:
     import src.config
 except:
@@ -46,4 +44,17 @@ class Gsdb:
         sheet = self.db.worksheet(name)
         sheet.append_row(arr)
 
-
+    def get_line_index_by_data(self, sheet_name, d):
+        sheet = self.db.worksheet(sheet_name)
+        cell = sheet.find(str(d))
+        if cell is None:
+            return cell
+        cell = cell.row
+        return cell
+    def get_line_by_data(self, s_name, d):
+        sheet = self.db.worksheet(s_name)
+        cell = sheet.find(str(d))
+        if cell is None:
+            return cell
+        cell = cell.row
+        return sheet.row_values(cell)

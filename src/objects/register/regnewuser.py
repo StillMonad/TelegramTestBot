@@ -62,10 +62,12 @@ class RegisterStep2:
 
         @bot.callback_query_handler(func=lambda call: call.data == "Подтверждение правильности данных")
         def register_to_db(call: types.CallbackQuery):
-            db.add_data("Пользователи", [call.from_user.id, call.from_user.username] + self.user_data[self.curr_reg - 1])
+            bot.delete_message(call.message.chat.id, call.message.message_id)
+            db.add_data("Пользователи", [call.from_user.id, call.message.chat.id, call.from_user.username] +
+                                         self.user_data[self.curr_reg - 1])
             self.user_data.pop(-1)
             self.curr_reg -= 1
-            db.users = Moderation.get_users(db)
+            db.users = Moderation.get_all_users_data(db)
 
             markup = InlineKeyboardMarkup()
             markup.add(InlineKeyboardButton("Главное меню", callback_data="Главное меню"))

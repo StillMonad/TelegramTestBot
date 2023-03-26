@@ -37,7 +37,7 @@ https://maps.google.com/maps/place/55.77892010751724+37.6071349569397/@55.778920
     def __make_markup(self, db):
         markup = InlineKeyboardMarkup()
         markup.add(
-        InlineKeyboardButton("Начать диалог с администратором", callback_data="Начать диалог с администратором"))
+        InlineKeyboardButton("Начать диалог с администратором", callback_data="Чат"))
         markup.add(InlineKeyboardButton("В главное меню", callback_data="Главное меню"))
         return markup
 

@@ -34,6 +34,7 @@ class Shop:
                                       parse_mode="HTML")
             else:
                 self.slider.pos = 0
+                bot.delete_message(call.message.chat.id, call.message.message_id)
                 bot.send_photo(photo=open(self.slider.get_data().media, "rb"),
                                chat_id=call.message.chat.id,
                                caption=self.slider.get_data().text,

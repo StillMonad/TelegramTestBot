@@ -17,6 +17,7 @@ class slider(base):
 
     def get_data(self):
         return self.data[self.pos]
+
     def markup_slider(self):
         slider_markup = InlineKeyboardMarkup() if (self.data[self.pos].markup is None) else self.data[self.pos].markup
         r1 = InlineKeyboardButton("←", callback_data=self.name + "_but_left")
@@ -24,10 +25,7 @@ class slider(base):
         r3 = InlineKeyboardButton("→", callback_data=self.name + "_but_right")
         slider_markup.row(r1, r2, r3)
         if not (self.parent is None):
-            if self.get_data().media is None:
-                slider_markup.add(InlineKeyboardButton("Назад к меню", callback_data=self.parent))
-            else:
-                slider_markup.add(InlineKeyboardButton("Назад к меню", callback_data=self.parent + "new"))
+            slider_markup.add(InlineKeyboardButton("Назад к меню", callback_data=self.parent))
         return slider_markup
 
     def init_callbacks(self):
@@ -60,4 +58,3 @@ class slider(base):
                                        message_id=call.message.message_id, reply_markup=markup)
                 bot.edit_message_caption(chat_id=call.message.chat.id, message_id=call.message.id,
                                          caption=self.data[self.pos].text, reply_markup=markup, parse_mode="HTML")
-

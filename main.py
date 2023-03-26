@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello_world():
-    return "<h1>Greetings!</h1>"
+    return 'Bot is up and running!'
 
 def run():
     app.run(host='0.0.0.0', port=80)
@@ -27,4 +27,5 @@ def keep_alive():
 if __name__ == "__main__":
     globals.InitGlobals()
     keep_alive()
-    globals.bot.polling(non_stop=True, interval=0) #запуск бота
+    # globals.bot.polling(non_stop=True, interval=0)
+    globals.bot.infinity_polling(none_stop=True)

@@ -13,7 +13,7 @@ from src.objects.rent import Rent
 from src.objects.shop import Shop
 from src.commands import Commands
 from src.objects.register.register import Register
-from src.objects.chat.chat import Chat
+from src.objects.chat import Chat
 import os
 try:
     import src.config
@@ -48,7 +48,7 @@ class InitGlobals:
             schedule, prices, promotions, contacts, rent, shop, commands, register, chat
         # ============ globals ===============
         print("Initialising globals... ", end='')
-        bot = TeleBot(BOT_TOKEN)
+        bot = TeleBot(BOT_TOKEN, parse_mode="HTML", disable_notification=True)
         db = Gsdb()
         markup = MyMarkup(db)
         print("...Done")

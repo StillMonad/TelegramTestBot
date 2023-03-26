@@ -62,7 +62,7 @@ class Rent:
     def __make_markup(self, db):
         markup = InlineKeyboardMarkup()
         markup.add(
-            InlineKeyboardButton("Начать диалог с администратором", callback_data="Начать диалог с администратором"))
+            InlineKeyboardButton("Начать диалог с администратором", callback_data="Чат"))
         markup.add(InlineKeyboardButton("Контакты", callback_data="Контакты"))
         markup.add(InlineKeyboardButton("В главное меню", callback_data="Главное меню"))
         return markup

@@ -1,3 +1,4 @@
+import telebot.apihelper
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from telebot import types, TeleBot
 import src.tools as tools
@@ -30,18 +31,17 @@ class MainMenu:
     def __init_handlers(self, bot: TeleBot):
         @bot.callback_query_handler(func=lambda call: call.data == self.call_data)
         def cb(call: types.CallbackQuery):
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                                  text=f"Привет, {call.message.chat.first_name}!\n" + self.text,
-                                  reply_markup=self.markup, parse_mode="HTML")
-
-        @bot.callback_query_handler(func=lambda call: call.data == self.call_data + "new")
-        def cb(call: types.CallbackQuery):
-            bot.send_message(chat_id=call.message.chat.id,
-                             text=f"Привет, {call.message.chat.first_name}!\n" + self.text,
-                             reply_markup=self.markup, parse_mode="HTML")
+            try:
+                bot.delete_message(call.message.chat.id, call.message.message_id)
+                bot.send_message(chat_id=call.message.chat.id,
+                                 text=f"Привет, {call.message.chat.first_name}!\n" + self.text,
+                                 reply_markup=self.markup, parse_mode="HTML")
+            except telebot.apihelper.ApiTelegramException:
+                bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
+                                      text=f"Привет, {call.message.chat.first_name}!\n" + self.text,
+                                      reply_markup=self.markup, parse_mode="HTML")
 
         @bot.message_handler(commands=self.commands)
         def message(msg: types.Message):
             bot.send_message(chat_id=msg.chat.id, text=f"Привет, {msg.chat.first_name}!\n" + self.text,
                              reply_markup=self.markup, parse_mode="HTML")
-

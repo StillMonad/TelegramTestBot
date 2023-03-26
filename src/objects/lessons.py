@@ -31,7 +31,7 @@ class Lessons:
     def __init_handlers(self, bot: TeleBot, db, register):
         @bot.callback_query_handler(func=lambda call: call.data == self.call_data)
         def cb(call: types.CallbackQuery):
-            users = Moderation.get_users(db)
+            users = Moderation.get_all_users_data(db)
             if str(call.from_user.id) in users.keys():
                 bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=self.text,
                                     reply_markup=self.markup, parse_mode="HTML")
