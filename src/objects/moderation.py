@@ -36,6 +36,8 @@ class Moderation:
             else:
                 bot.send_message(chat_id=msg.chat.id, text=f"Ошибка добавления:\nПользователь уже существует.")
 
+
+
         @bot.message_handler(commands=['demote'])
         def demote(msg: types.Message):
             """

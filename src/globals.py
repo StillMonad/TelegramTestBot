@@ -1,7 +1,6 @@
 from telebot import TeleBot, types
-from config import BOT_TOKEN, GS_LINK
-from database.gsconnect import gsdb
-from markups import MyMarkup
+from src.database.gsconnect import Gsdb
+from src.markups import MyMarkup
 from src.objects.moderation import Moderation
 from src.objects.main_menu import MainMenu
 from src.objects.lessons import Lessons
@@ -14,6 +13,13 @@ from src.objects.rent import Rent
 from src.objects.shop import Shop
 from src.commands import Commands
 from src.objects.register.register import Register
+from src.objects.chat.chat import Chat
+import os
+try:
+    import src.config
+except:
+    pass
+
 
 bot = None
 db = None
@@ -31,18 +37,21 @@ rent = None
 shop = None
 commands = None
 register = None
+chat = None
+
+BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 
 class InitGlobals:
     def __init__(self):
         global bot, db, markup, users, moderation, menu, lessons, activities, \
-            schedule, prices, promotions, contacts, rent, shop, commands, register
+            schedule, prices, promotions, contacts, rent, shop, commands, register, chat
         # ============ globals ===============
         print("Initialising globals... ", end='')
         bot = TeleBot(BOT_TOKEN)
-        db = gsdb(GS_LINK)
+        db = Gsdb()
         markup = MyMarkup(db)
-        print("Done")
+        print("...Done")
 
         self.register_reboot_handler()
 
@@ -58,7 +67,7 @@ class InitGlobals:
         promotions = Promotions(bot, db)
         rent = Rent(bot, db)
         shop = Shop(bot, db)
-
+        chat = Chat(bot, db)
         # команды должны быть в самом конце
         commands = Commands(bot, db)
         print("...Done")

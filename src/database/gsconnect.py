@@ -2,18 +2,22 @@ import urllib
 import gspread
 from telebot import types
 from src.classes.data import data
+import os
+try:
+    import src.config
+except:
+    pass
 
-class gsdb:
-    def __init__(self, link):
-        gs = gspread.service_account()
+
+class Gsdb:
+    def __init__(self):
+        with open("service_account.json", 'w') as f:
+            f.write(os.getenv('SERVICE_ACC'))
+
+        gs = gspread.service_account("service_account.json")
+        os.remove("service_account.json")
+        link = os.getenv('GS_LINK')
         self.db = gs.open_by_url(link)
-
-        self.worksheet_admins = self.db.worksheet('Администраторы')
-        self.worksheet_users = self.db.worksheet('Пользователи')
-        self.worksheet_booking = self.db.worksheet('Оформление заказа')
-        self.worksheet_workers = self.db.worksheet('Мастера')
-        self.worksheet_activities = self.db.worksheet('Мероприятия')
-        self.worksheet_goods = self.db.worksheet('Товары')
 
     @staticmethod
     def get_coord(x, y):
@@ -38,6 +42,8 @@ class gsdb:
         sheet = self.db.worksheet(name)
         return sheet.get_values()
 
-    def add_data(self, name, data):
+    def add_data(self, name, arr):
         sheet = self.db.worksheet(name)
-        sheet.append_row(data)
+        sheet.append_row(arr)
+
+
