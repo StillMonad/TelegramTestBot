@@ -9,6 +9,7 @@ class MainMenu:
     def __init__(self, bot: TeleBot):
         self.call_data = "Главное меню"
         self.commands = ["menu", "start"]
+        self.call_menu = ["menu", "start", "Вернуться в меню", "Перейти в меню"]
         self.text = "Я супер-пупер крутой тестовый бот без половины функций! 😭\nЧем я могу помочь?"
         self.markup = self.__make_markup()
         self.__init_handlers(bot)
@@ -43,5 +44,10 @@ class MainMenu:
 
         @bot.message_handler(commands=self.commands)
         def message(msg: types.Message):
+            bot.send_message(chat_id=msg.chat.id, text=f"Привет, {msg.chat.first_name}!\n" + self.text,
+                             reply_markup=self.markup, parse_mode="HTML")
+
+        @bot.message_handler(func=lambda msg: msg.text in self.call_menu)
+        def call_menu(msg: types.Message):
             bot.send_message(chat_id=msg.chat.id, text=f"Привет, {msg.chat.first_name}!\n" + self.text,
                              reply_markup=self.markup, parse_mode="HTML")

@@ -75,8 +75,8 @@ class InitGlobals:
 
     def register_reboot_handler(self):
         @bot.message_handler(commands=['restart', 'init', 'reboot', 'update'])
-        def message(msg: types.Message):
-            if not db.is_admin(msg.from_user):
+        def reinit(msg: types.Message):
+            if not Moderation.is_admin(db, msg.from_user.id):
                 bot.send_message(chat_id=msg.chat.id, text=f"У вас не достаточно привелегий.\n")
                 return
             InitGlobals()
